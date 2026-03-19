@@ -104,24 +104,32 @@ if parser.has_sitemaps():
 
 ```
 
-## Additional Features
+### Converting Sitemap XML to a Python dict
 
-### Caching
-
-The parser uses the hishel library for caching by default. You can disable caching if needed by passing the should_cache=False flag when creating the SiteMapParser instance.
+If you'd like to work with the parsed sitemap as a plain Python dictionary, you can use `SiteMapParser.to_dict()`.
 
 ```python
-parser = SiteMapParser(sitemap_url, should_cache=False)
+from sitemap_parser import SiteMapParser
+
+xml = """
+<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">
+    <url>
+        <loc>https://example.com/</loc>
+    </url>
+</urlset>
+"""
+
+parser = SiteMapParser(source=xml, is_data_string=True)
+parsed = parser.to_dict()
+
+# xmltodict represents repeated elements as lists
+print(parsed["urlset"]["url"][0]["loc"])
 ```
 
-### Configuration
-
-**Caching**: The caching feature uses Hishel, an efficient caching library. You can configure the caching directory or turn off caching completely.
-
-Example:
+You can also enable namespace processing for expanded namespace keys:
 
 ```python
-parser = SiteMapParser(sitemap_url, cache_dir=Path("/path/to/cache"))
+parsed = parser.to_dict(process_namespaces=True)
 ```
 
 ## Disabling Logging
@@ -135,23 +143,4 @@ import logging
 
 # Set the logging level to CRITICAL to disable logging
 logging.getLogger("sitemap_parser").setLevel(logging.CRITICAL)
-
 ```
-
-## Contributing
-
-Contributions are welcome! If you'd like to improve this project, feel free to submit a pull request. Please follow the guidelines below:
-
-1. Fork the Repository
-2. Create a New Branch
-3. Submit a Pull Request
-
-## License
-
-This project is licensed under the MIT License.
-
-## Contact
-
-If you have any questions or suggestions, please open an issue on the GitHub repository. You can also reach me via email at [tlovinator@gmail.com](mailto:tlovinator@gmail.com) or on Discord at TheLovinator#9276.
-
-Happy parsing!

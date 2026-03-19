@@ -11,6 +11,7 @@
         "isort",
         "levelname",
         "lxml",
+        "niquests",
         "pprint",
         "pydocstyle"
     ]
