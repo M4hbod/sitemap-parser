@@ -16,5 +16,5 @@ jobs:
           version: "latest"
       - run: uv sync --all-extras --all-groups
       - run: uv run pytest
-      - run: ruff check --exit-non-zero-on-fix --verbose
-      - run: ruff format --check --verbose
+      - run: uv tool run ruff check --exit-non-zero-on-fix --verbose
+      - run: uv tool run ruff format --check --verbose
