@@ -10,21 +10,10 @@ This is a Python library designed to parse XML sitemaps and sitemap index files 
 
 This is a fork of [Dave O'Connor](https://github.com/daveoconnor)'s [site-map-parser](https://github.com/daveoconnor/site-map-parser). I couldn't have done this without his original work.
 
-## Features
-
-- **Sitemap Parsing**: Extract URLs from standard sitemaps.
-- **Sitemap Index Parsing**: Extract links to other sitemaps from sitemap index files.
-- **Supports Caching**: Use Hishel for caching responses and reducing redundant requests.
-- **Handles Large Sitemaps**: Capable of parsing large sitemaps and sitemap indexes efficiently.
-- **Customizable Caching Options**: Option to enable or disable caching while downloading sitemaps.
 
 ## Installation
 
-You can install the required dependencies with your preferred package manager. This library requires Python 3.9 or higher.
-
 ```sh
-poetry add git+https://github.com/TheLovinator1/sitemap-parser.git
-pip install git+https://github.com/TheLovinator1/sitemap-parser.git
 uv add git+https://github.com/TheLovinator1/sitemap-parser.git
 ```
 
@@ -35,21 +24,32 @@ The library provides a SiteMapParser class that can be used to parse sitemaps an
 ### Parsing a Sitemap from a URL
 
 ```python
-from sitemap_parser import SitemapIndex, SiteMapParser, UrlSet
+import logging
+from typing import TYPE_CHECKING
 
-url = "https://www.webhallen.com/sitemap.xml" # Sitemap index
-# url = "https://www.webhallen.com/sitemap.infoPages.xml" # Sitemap with URLs
+from sitemap_parser import SiteMapParser
+
+if TYPE_CHECKING:
+    from sitemap_parser import SitemapIndex
+    from sitemap_parser import UrlSet
+
+logging.basicConfig(level=logging.INFO, format="%(message)s")
+logger: logging.Logger = logging.getLogger(__name__)
+
+
+# url = "https://ttvdrops.lovinator.space/sitemap.xml"  # Sitemap index
+url = "https://ttvdrops.lovinator.space/sitemap-static.xml"  # Sitemap with URLs
 parser = SiteMapParser(source=url)
 
 if parser.has_sitemaps():
     sitemaps: SitemapIndex = parser.get_sitemaps()
     for sitemap in sitemaps:
-        print(sitemap)
+        logger.info(sitemap)
 
 elif parser.has_urls():
     urls: UrlSet = parser.get_urls()
     for url in urls:
-        print(url)
+        logger.info(url)
 ```
 
 ### Parsing a Raw XML String
@@ -77,6 +77,10 @@ parser = SiteMapParser(source=xml_data, is_data_string=True)
 urls: UrlSet = parser.get_urls()
 for url in urls:
     print(url)
+
+# Output:
+# - https://example.com/
+# - https://example.com/about
 ```
 
 ### Exporting Sitemap Data to JSON
@@ -85,23 +89,33 @@ You can export the parsed sitemap data to a JSON file using the JSONExporter cla
 
 ```python
 import json
-from pprint import pprint
+import logging
 
-from sitemap_parser import JSONExporter, SiteMapParser
+from sitemap_parser import JSONExporter
+from sitemap_parser import SiteMapParser
 
-parser = SiteMapParser(source="https://www.webhallen.com/sitemap.infoPages.xml")
-exporter = JSONExporter(data=parser)
+logging.basicConfig(level=logging.INFO, format="%(message)s")
+logger: logging.Logger = logging.getLogger(__name__)
 
-if parser.has_urls():
-    json_data: str = exporter.export_urls()
-    json_data = json.loads(json_data)
-    pprint(json_data)
+# Sitemap with URLs to other sitemaps
+parser = SiteMapParser(source="https://ttvdrops.lovinator.space/sitemap.xml")
 
 if parser.has_sitemaps():
-    json_data: str = exporter.export_sitemaps()
+    json_data: str = JSONExporter(data=parser).export_sitemaps()
     json_data = json.loads(json_data)
-    pprint(json_data)
+    logger.info("Exported sitemaps: %s", json_data)
 
+logger.info("----" * 10)
+
+# Sitemap with "real" URLs
+parser2 = SiteMapParser(
+    source="https://ttvdrops.lovinator.space/sitemap-static.xml",
+)
+
+if parser2.has_urls():
+    json_data: str = JSONExporter(data=parser2).export_urls()
+    json_data = json.loads(json_data)
+    logger.info("Exported URLs: %s", json_data)
 ```
 
 ### Converting Sitemap XML to a Python dict
