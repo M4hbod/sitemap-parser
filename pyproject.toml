@@ -1,10 +1,27 @@
 [project]
-name = "sitemap-parser"
+name = "py-sitemap-parser"
 version = "2.0.0"
 description = "Simple sitemap parser for Python"
 readme = "README.md"
 authors = [{ name = "Joakim Helleśen", email = "tlovinator@gmail.com" }]
-requires-python = ">=3.14"
+license = { text = "MIT" }
+requires-python = ">=3.9"
+keywords = ["sitemap", "xml", "parser", "seo", "sitemap-parser", "sitemap-index"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Text Processing :: Markup :: XML",
+    "Typing :: Typed",
+]
 dependencies = [
     "lxml",
     "niquests",
@@ -12,6 +29,12 @@ dependencies = [
     "types-xmltodict",
     "xmltodict",
 ]
+
+[project.urls]
+Homepage = "https://github.com/M4hbod/sitemap-parser"
+Repository = "https://github.com/M4hbod/sitemap-parser"
+Issues = "https://github.com/M4hbod/sitemap-parser/issues"
+Documentation = "https://github.com/M4hbod/sitemap-parser#readme"
 
 [build-system]
 requires = ["uv_build>=0.10.11,<0.11.0"]

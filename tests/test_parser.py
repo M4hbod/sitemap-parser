@@ -5,15 +5,15 @@ from typing import Any
 import niquests
 import pytest
 
-import sitemap_parser
-from sitemap_parser import BaseData
-from sitemap_parser import JSONExporter
-from sitemap_parser import Sitemap
-from sitemap_parser import SitemapIndex
-from sitemap_parser import SiteMapParser
-from sitemap_parser import Url
-from sitemap_parser import UrlSet
-from sitemap_parser import download_uri_data
+import py_sitemap_parser
+from py_sitemap_parser import BaseData
+from py_sitemap_parser import JSONExporter
+from py_sitemap_parser import Sitemap
+from py_sitemap_parser import SitemapIndex
+from py_sitemap_parser import SiteMapParser
+from py_sitemap_parser import Url
+from py_sitemap_parser import UrlSet
+from py_sitemap_parser import download_uri_data
 
 if TYPE_CHECKING:
     import datetime
@@ -22,7 +22,7 @@ if TYPE_CHECKING:
 def test_ttvdrops_sitemap_parsing() -> None:
     """Test parsing the sitemap from ttvdrops.lovinator.space using the library."""
     url = "https://ttvdrops.lovinator.space/sitemap.xml"
-    parser = sitemap_parser.SiteMapParser(source=url)
+    parser = py_sitemap_parser.SiteMapParser(source=url)
 
     if parser.has_urls():
         msg = "Expected ttvdrops sitemap to be a URL set, but found <sitemapindex>!"
@@ -39,7 +39,7 @@ def test_ttvdrops_sitemap_parsing() -> None:
         pytest.fail("Neither <urlset> nor <sitemapindex> found in ttvdrops sitemap!")
 
     sitemaps_that_are_urls = "https://ttvdrops.lovinator.space/sitemap-static.xml"
-    parser2 = sitemap_parser.SiteMapParser(source=sitemaps_that_are_urls)
+    parser2 = py_sitemap_parser.SiteMapParser(source=sitemaps_that_are_urls)
     if parser2.has_urls():
         urlset: UrlSet = parser2.get_urls()
         urls: list[Url] = list(urlset)
@@ -280,7 +280,7 @@ def test_sitemapparser_to_dict_cache_and_runtime_errors(
     def failing_parse(*args: object, **kwargs: object) -> dict[str, object]:
         pytest.fail("xmltodict.parse should not be called")
 
-    monkeypatch.setattr(sitemap_parser.xmltodict, "parse", failing_parse)
+    monkeypatch.setattr(py_sitemap_parser.xmltodict, "parse", failing_parse)
     assert parser.to_dict()["urlset"]["url"][0]["loc"] == "https://example.com/"
 
     called: dict[str, bool] = {"seen": False}
@@ -289,7 +289,7 @@ def test_sitemapparser_to_dict_cache_and_runtime_errors(
         called["seen"] = True
         return {"root": {}}
 
-    monkeypatch.setattr(sitemap_parser.xmltodict, "parse", tracing_parse)
+    monkeypatch.setattr(py_sitemap_parser.xmltodict, "parse", tracing_parse)
     parser.to_dict(process_namespaces=True)
     assert called["seen"]
 
@@ -356,20 +356,20 @@ def test_download_uri_data_success_and_errors(monkeypatch: pytest.MonkeyPatch) -
     def fake_get_success(uri: str) -> DummyResponse:
         return DummyResponse(b"<xml></xml>")
 
-    monkeypatch.setattr("sitemap_parser.niquests.get", fake_get_success)
+    monkeypatch.setattr("py_sitemap_parser.niquests.get", fake_get_success)
     assert download_uri_data("https://example.com") == b"<xml></xml>"
 
     def fake_get_empty(uri: str) -> DummyResponse:
         return DummyResponse(b"")
 
-    monkeypatch.setattr("sitemap_parser.niquests.get", fake_get_empty)
+    monkeypatch.setattr("py_sitemap_parser.niquests.get", fake_get_empty)
     with pytest.raises(ValueError, match="No content found at"):
         download_uri_data("https://example.com")
 
     def fake_get_http_error(uri: str) -> DummyResponse:
         return DummyResponse(b"<xml></xml>", should_raise=True)
 
-    monkeypatch.setattr("sitemap_parser.niquests.get", fake_get_http_error)
+    monkeypatch.setattr("py_sitemap_parser.niquests.get", fake_get_http_error)
     with pytest.raises(niquests.HTTPError):
         download_uri_data("https://example.com")
 

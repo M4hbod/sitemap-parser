@@ -1,7 +1,7 @@
 # Sitemap Parser
 
 <p align="center">
-  <img src="https://github.com/thelovinator1/sitemap-parser/blob/master/.github/logo.png?raw=true" title="Robot searching for sitemaps" alt="Robot searching for sitemaps" width="300" height="300" />
+  <img src="https://github.com/M4hbod/sitemap-parser/blob/master/.github/logo.png?raw=true" title="Robot searching for sitemaps" alt="Robot searching for sitemaps" width="300" height="300" />
 </p>
 
 This is a Python library designed to parse XML sitemaps and sitemap index files from a given URL. It supports both standard XML sitemaps (which contain URLs) and sitemap index files (which contain links to other sitemaps). This tool is useful for extracting data such as URLs and modification dates from website sitemaps.
@@ -14,7 +14,7 @@ This is a fork of [Dave O'Connor](https://github.com/daveoconnor)'s [site-map-pa
 ## Installation
 
 ```sh
-uv add git+https://github.com/TheLovinator1/sitemap-parser.git
+uv add py-sitemap-parser
 ```
 
 ## Usage
@@ -27,11 +27,11 @@ The library provides a SiteMapParser class that can be used to parse sitemaps an
 import logging
 from typing import TYPE_CHECKING
 
-from sitemap_parser import SiteMapParser
+from py_sitemap_parser import SiteMapParser
 
 if TYPE_CHECKING:
-    from sitemap_parser import SitemapIndex
-    from sitemap_parser import UrlSet
+    from py_sitemap_parser import SitemapIndex
+    from py_sitemap_parser import UrlSet
 
 logging.basicConfig(level=logging.INFO, format="%(message)s")
 logger: logging.Logger = logging.getLogger(__name__)
@@ -55,7 +55,7 @@ elif parser.has_urls():
 ### Parsing a Raw XML String
 
 ```python
-from sitemap_parser import SiteMapParser, UrlSet
+from py_sitemap_parser import SiteMapParser, UrlSet
 
 xml_data = """
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -91,8 +91,8 @@ You can export the parsed sitemap data to a JSON file using the JSONExporter cla
 import json
 import logging
 
-from sitemap_parser import JSONExporter
-from sitemap_parser import SiteMapParser
+from py_sitemap_parser import JSONExporter
+from py_sitemap_parser import SiteMapParser
 
 logging.basicConfig(level=logging.INFO, format="%(message)s")
 logger: logging.Logger = logging.getLogger(__name__)
@@ -123,7 +123,7 @@ if parser2.has_urls():
 If you'd like to work with the parsed sitemap as a plain Python dictionary, you can use `SiteMapParser.to_dict()`.
 
 ```python
-from sitemap_parser import SiteMapParser
+from py_sitemap_parser import SiteMapParser
 
 xml = """
 <urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">
