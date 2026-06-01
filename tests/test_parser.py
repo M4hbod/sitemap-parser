@@ -161,6 +161,31 @@ def test_url_changefreq_and_priority_validation() -> None:
         Url(loc="https://example.com/", priority=-0.1)
 
 
+def test_url_changefreq_case_insensitive() -> None:
+    """Capitalized changefreq values (e.g. 'Always') are normalized to lowercase.
+
+    Real-world sitemaps such as youm7.com emit a capitalized <changefreq>,
+    which the spec lists only in lowercase. The parser normalizes the case
+    instead of raising ValueError.
+    """
+    xml = """<?xml version="1.0" encoding="UTF-8"?>
+    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+      <url>
+        <loc>https://www.youm7.com/story/16750</loc>
+        <lastmod>2008-02-04T09:15:03Z</lastmod>
+        <changefreq>Always</changefreq>
+        <priority>0.6</priority>
+      </url>
+    </urlset>"""
+
+    parser = SiteMapParser(source=xml, is_data_string=True)
+    url = next(iter(parser.get_urls()))
+    assert url.changefreq == "always"
+
+    # Direct construction is normalized too.
+    assert Url(loc="https://example.com/", changefreq="WEEKLY").changefreq == "weekly"
+
+
 def test_urlset_iteration_and_missing_items() -> None:
     """Validate UrlSet iteration and missing url handling."""
     urlset_data: dict[str, dict[str, str]] | dict[str, list[dict[str, str]]] = {

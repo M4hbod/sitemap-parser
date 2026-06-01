@@ -265,9 +265,11 @@ class Url(BaseData):
         Raises:
             ValueError: Value is not an allowed value
         """
-        if frequency is not None and frequency not in Url.valid_freqs:
-            msg: str = f"'{frequency}' is not an allowed value: {Url.valid_freqs}"
-            raise ValueError(msg)
+        if frequency is not None:
+            frequency = frequency.lower()
+            if frequency not in Url.valid_freqs:
+                msg: str = f"'{frequency}' is not an allowed value: {Url.valid_freqs}"
+                raise ValueError(msg)
         self._changefreq: Freqs | None = frequency
 
     @property
