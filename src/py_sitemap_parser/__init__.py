@@ -29,7 +29,7 @@ __all__: list[str] = [
 
 logger: logging.Logger = logging.getLogger("sitemap_parser")
 
-type Freqs = Literal[
+Freqs = Literal[
     "always",
     "hourly",
     "daily",
@@ -38,7 +38,7 @@ type Freqs = Literal[
     "yearly",
     "never",
 ]
-type ValidFreqs = tuple[
+ValidFreqs = tuple[
     Literal["always"],
     Literal["hourly"],
     Literal["daily"],
@@ -47,19 +47,19 @@ type ValidFreqs = tuple[
     Literal["yearly"],
     Literal["never"],
 ]
-type Fields = tuple[
+Fields = tuple[
     Literal["loc"],
     Literal["lastmod"],
     Literal["changefreq"],
     Literal["priority"],
 ]
-type UrlFields = tuple[
+UrlFields = tuple[
     Literal["loc"],
     Literal["lastmod"],
     Literal["changefreq"],
     Literal["priority"],
 ]
-type SitemapFields = tuple[
+SitemapFields = tuple[
     Literal["loc"],
     Literal["lastmod"],
 ]
