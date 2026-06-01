@@ -1,6 +1,6 @@
 [project]
 name = "py-sitemap-parser"
-version = "2.0.0"
+version = "2.0.1"
 description = "Simple sitemap parser for Python"
 readme = "README.md"
 authors = [{ name = "Joakim Helleśen", email = "tlovinator@gmail.com" }]
